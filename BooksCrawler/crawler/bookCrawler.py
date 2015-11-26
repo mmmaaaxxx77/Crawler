@@ -161,7 +161,7 @@ def getLanguage(soup):
         try:
             content = field.text.encode("utf-8")
             if len(content) != 0:
-                return content.split("：")[1]
+                return content.split("：")[1].replace(" ","")
             else:
                 getAuthor2(soup)
         except:
@@ -206,7 +206,7 @@ def getPublication(soup):
         try:
             content = field.text.encode("utf-8")
             if len(content) != 0:
-                return content.split("：")[1]
+                return content.split("：")[1].replace(" ","")
             else:
                 getAuthor2(soup)
         except:
@@ -276,7 +276,7 @@ def getCatalog(soup):
         result = findTargetReturnNeeds(soup, 'div.mod_b.type02_m057.clearfix', "目錄", 'h3')
         return (BeautifulSoup(str(result), "html.parser")).select('div.content')[0].text.encode("utf-8")
     except:
-        print("getAuthorIntroduction exception")
+        print("getCatalog exception")
     return None
 
 
@@ -285,5 +285,5 @@ def getPreface(soup):
         result = findTargetReturnNeeds(soup, 'div.mod_b.type02_m057.clearfix', "序", 'h3')
         return (BeautifulSoup(str(result), "html.parser")).select('div.content')[0].text.encode("utf-8")
     except:
-        print("getAuthorIntroduction exception")
+        print("getPreface exception")
     return None

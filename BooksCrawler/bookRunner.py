@@ -36,8 +36,8 @@ def crawlerBook(url, imagePath):
     return book
 
 
-
-html = requests.get("http://www.books.com.tw/products/0010697989?loc=P_005_001", timeout=(10.0, 10.0)).text
+"""
+html = requests.get("http://www.books.com.tw/products/0010698169", timeout=(10.0, 10.0)).text
 soup = BeautifulSoup(html, "html.parser")
 book = Book(
     isbn=crawler.getIsbn(soup),
@@ -84,3 +84,5 @@ print("BookIntroduction: " + ("None" if book.bookIntroduction == None else book.
 print("AuthorIntroduction: " + ("None" if book.authorIntroduction == None else book.authorIntroduction))
 print("Catalog: " + ("None" if book.catalog == None else book.catalog))
 print("Preface: " + ("None" if book.preface == None else book.preface))
+"""
+

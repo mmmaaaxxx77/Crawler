@@ -15,9 +15,8 @@ def getBookList(soup):
     list = []
     try:
         p = soup.select('div.item > a')
-        print(p)
         for o in p:
-            list.append(o['href'].text.encode("utf-8"))
+            list.append(o['href'].encode("utf-8"))
         return list
     except:
         print("getBookList exception")
