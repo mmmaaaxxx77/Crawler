@@ -9,38 +9,46 @@ __author__ = 'johnnytsai'
 
 
 def isFiledSame(soup, soupeSelect, name):
-    result = soup.select(soupeSelect)
-    content = result[0].text.encode("utf-8")
-    if content.find(name) != -1:
-        return True
-    else:
-        return  False
+    try:
+        result = soup.select(soupeSelect)
+        content = result[0].text.encode("utf-8")
+        if content.find(name) != -1:
+            return True
+        else:
+            return  False
+    except:
+        return False
 
 
 def findSameTextFieldInList(soup, soupeSelect, name):
-    result = soup.select(soupeSelect)
-    for txt in result:
-        if txt.text.encode("utf-8").find(name) != -1:
-            return txt
-    return None
+    try:
+        result = soup.select(soupeSelect)
+        for txt in result:
+            if txt.text.encode("utf-8").find(name) != -1:
+                return txt
+        return None
+    except:
+        return None
 
 def findTargetReturnNeeds(soup, target, name, check):
-    result = soup.select(target)
-    for txt in result:
-        s = BeautifulSoup(str(txt), "html.parser")
-        r = s.select(check)
-        if r[0].text.encode("utf-8").find(name) != -1:
-            return txt
-
-    return None
+    try:
+        result = soup.select(target)
+        for txt in result:
+            s = BeautifulSoup(str(txt), "html.parser")
+            r = s.select(check)
+            if r[0].text.encode("utf-8").find(name) != -1:
+                return txt
+        return None
+    except:
+        return None
 
 
 def getIsbn(soup):
     try:
-        result = soup.select("div.bd > ul > li ")
-        content = result[0].text.encode("utf-8")
+        result = soup.select('meta[itemprop="productID"]')
+        content = result[0]['content'].encode("utf-8")
         if len(content) != 0:
-            return content.split("：")[1]
+            return content.split(":")[1]
         else:
             getIsbn(soup)
     except:
@@ -231,32 +239,34 @@ def getClassification(soup):
 
 
 def getCoverImageUrl(soup):
-    #try:
-    result = soup.select('div.cnt_mod002.cover_img > img')
-    content = result[0]['src'].encode("utf-8")
-    if len(content) != 0:
-        u = urlparse(content)
-        query = parse_qs(u.query)
-        query.pop('h', None)
-        query.pop('w', None)
-        u = u._replace(query=urlencode(query, True))
-        #pasr = urlparse(content).query[2:]
-        return urlunparse(u)
-    else:
-        getCoverImageUrl(soup)
-    #except:
-        #pass
+    try:
+        result = soup.select('div.cnt_mod002.cover_img > img')
+        content = result[0]['src'].encode("utf-8")
+        if len(content) != 0:
+            u = urlparse(content)
+            query = parse_qs(u.query)
+            query.pop('h', None)
+            query.pop('w', None)
+            u = u._replace(query=urlencode(query, True))
+            #pasr = urlparse(content).query[2:]
+            if(urlunparse(u).find("comingsoon_sq.jpg") != -1):
+                return None
+            return urlunparse(u)
+        else:
+            getCoverImageUrl(soup)
+    except:
+        return None
     return None
 
 
 def getBookIntroduction(soup):
     try:
         result = soup.select('div.content')
-        content = result[0].text.encode("utf-8")
+        content = result[0].text.encode("utf-8").lstrip()
         if len(content) != 0:
             return content
         else:
-            getBookIntroduction(soup)
+            getBookIntroduction(soup).lstrip()
     except:
         print("getBookIntroduction exception")
     return None
@@ -265,7 +275,7 @@ def getBookIntroduction(soup):
 def getAuthorIntroduction(soup):
     try:
         result = findTargetReturnNeeds(soup, 'div.mod_b.type02_m057.clearfix', "作者介紹", 'h3')
-        return (BeautifulSoup(str(result), "html.parser")).select('div.content')[0].text.encode("utf-8")
+        return (BeautifulSoup(str(result), "html.parser")).select('div.content')[0].text.encode("utf-8").lstrip()
     except:
         print("getAuthorIntroduction exception")
     return None
@@ -274,7 +284,7 @@ def getAuthorIntroduction(soup):
 def getCatalog(soup):
     try:
         result = findTargetReturnNeeds(soup, 'div.mod_b.type02_m057.clearfix', "目錄", 'h3')
-        return (BeautifulSoup(str(result), "html.parser")).select('div.content')[0].text.encode("utf-8")
+        return (BeautifulSoup(str(result), "html.parser")).select('div.content')[0].text.encode("utf-8").lstrip()
     except:
         print("getCatalog exception")
     return None
@@ -283,7 +293,7 @@ def getCatalog(soup):
 def getPreface(soup):
     try:
         result = findTargetReturnNeeds(soup, 'div.mod_b.type02_m057.clearfix', "序", 'h3')
-        return (BeautifulSoup(str(result), "html.parser")).select('div.content')[0].text.encode("utf-8")
+        return (BeautifulSoup(str(result), "html.parser")).select('div.content')[0].text.encode("utf-8").lstrip()
     except:
         print("getPreface exception")
     return None

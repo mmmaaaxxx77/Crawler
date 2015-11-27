@@ -6,6 +6,7 @@ from model.book import Book
 from saver import imageSaver
 
 def crawlerBook(url, imagePath):
+    print("now :" + url)
     html = requests.get(url, timeout=(10.0, 10.0)).text
     soup = BeautifulSoup(html, "html.parser")
     book = Book(
@@ -26,18 +27,21 @@ def crawlerBook(url, imagePath):
         bookIntroduction=crawler.getBookIntroduction(soup),
         authorIntroduction=crawler.getAuthorIntroduction(soup),
         catalog=crawler.getCatalog(soup),
-        preface=crawler.getPreface(soup)
+        preface=crawler.getPreface(soup),
+        fromWhere="books"
     )
     # save image
-    book.bookUrl = url;
-    book.coverImageId = book.isbn + ".jpg"
-    imageSaver.saveImageFile(imagePath + book.coverImageId, book.coverImageUrl)
+    book.bookUrl = url
+    if book.coverImageUrl != None:
+        if book.isbn != None:
+            book.coverImageId = book.isbn + "-" + book.fromWhere + ".jpg"
+            imageSaver.saveImageFile(imagePath + book.coverImageId, book.coverImageUrl)
 
     return book
 
 
 """
-html = requests.get("http://www.books.com.tw/products/0010698169", timeout=(10.0, 10.0)).text
+html = requests.get("http://www.books.com.tw/products/0010692781?loc=P_004_050", timeout=(10.0, 10.0)).text
 soup = BeautifulSoup(html, "html.parser")
 book = Book(
     isbn=crawler.getIsbn(soup),

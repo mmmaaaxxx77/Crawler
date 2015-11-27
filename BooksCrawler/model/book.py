@@ -45,6 +45,8 @@ class Book:
     catalog = None
     # 序
     preface = None
+    # 出自哪一網站
+    fromWhere = None
     # 建立時間
     createDate = datetime.datetime.now()
     # 修改時間
@@ -71,5 +73,6 @@ class Book:
         self.authorIntroduction = None if 'authorIntroduction' not in dic else dic["authorIntroduction"]
         self.catalog = None if 'catalog' not in dic else dic["catalog"]
         self.preface = None if 'preface' not in dic else dic["preface"]
+        self.fromWhere = None if 'fromWhere' not in dic else dic["fromWhere"]
 
 

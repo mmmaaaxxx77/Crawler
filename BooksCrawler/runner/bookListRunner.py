@@ -1,14 +1,18 @@
 # -*- coding: utf-8 -*-
 import json
+import time
+
 from bs4 import BeautifulSoup
 import requests
-import time
+
 import bookRunner
 from crawler import listCrawler
 import urlList
 
 __author__ = 'johnnytsai'
 
+now_save = 0
+now_error = []
 
 for l in urlList.booklist:
     html = requests.get(l, timeout=(10.0, 10.0)).text
@@ -20,7 +24,7 @@ for l in urlList.booklist:
         soup2 = BeautifulSoup(html2, "html.parser")
         #print(listCrawler.getBookList(soup2))
         for bookurl in listCrawler.getBookList(soup2):
-            book = bookRunner.crawlerBook(bookurl, "/Users/johnnytsai/Desktop/test/")
+            book = bookRunner.crawlerBook(bookurl, "/Users/johnnytsai/Desktop/books/image/")
             """
             print("ISBN: " + ("None" if book.isbn == None else book.isbn))
             print("Name: " + ("None" if book.name == None else book.name))
@@ -37,7 +41,7 @@ for l in urlList.booklist:
             print("Classification: " + ("None" if book.classification == None else book.classification))
             print("CoverImageId: " + ("None" if book.publication == None else book.coverImageId))
             print("CoverImageUrl: " + ("None" if book.coverImageUrl == None else book.coverImageUrl))
-            #print("BookUrl: " + ("None" if book.publication == None else book.bookUrl))
+            print("BookUrl: " + ("None" if book.publication == None else book.bookUrl))
             print("BookIntroduction: " + ("None" if book.bookIntroduction == None else book.bookIntroduction))
             print("AuthorIntroduction: " + ("None" if book.authorIntroduction == None else book.authorIntroduction))
             print("Catalog: " + ("None" if book.catalog == None else book.catalog))
@@ -45,5 +49,16 @@ for l in urlList.booklist:
             print("--------------------")
             """
             print(json.dumps(book.__dict__, encoding="utf-8", ensure_ascii=False))
-            time.sleep(5)
+            if(book.isbn != None):
+                content = json.dumps(book.__dict__, encoding="utf-8", ensure_ascii=False)
+                ff = open("/Users/johnnytsai/Desktop/books/json/" + book.isbn + "-" + book.fromWhere + ".json", 'a')
+                ff.write(content)
+                now_save += 1
+            else:
+                print("error book")
+                now_error.append(book)
+            print("now_save: " + str(now_save))
+            print("now_error: " + str(len(now_error)))
+            print("now_error: " + str(now_error))
+            time.sleep(1)
         time.sleep(5)
