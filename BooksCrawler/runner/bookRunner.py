@@ -8,7 +8,7 @@ from saver import imageSaver
 def crawlerBook(url, imagePath):
     print("now :" + url)
     header = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.101 Safari/537.36' }
-    html = requests.get(url, timeout=(10.0, 10.0), headers=header).text
+    html = requests.get(url, timeout=(20.0, 20.0), headers=header).text
     soup = BeautifulSoup(html, "html.parser")
     book = Book(
         isbn=crawler.getIsbn(soup),
