@@ -41,7 +41,7 @@ class Checker(Thread):
                 if wok.idel == True:
                     num += 1
 
-            if num == 10:
+            if num == 5:
                 print("--------- all finish ---------")
                 break
             else:
@@ -54,7 +54,7 @@ class Checker(Thread):
 booksQueue = Queue.Queue(0)
 
 ## 啟動 worker
-for i in xrange(10):
+for i in xrange(5):
     Worker().start()
 print("--------- worker started ---------")
 
