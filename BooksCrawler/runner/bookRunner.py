@@ -1,44 +1,60 @@
 # -*- coding: utf-8 -*-
 from bs4 import BeautifulSoup
 import requests
+import time
 import crawler.bookCrawler as crawler
 from model.book import Book
 from saver import imageSaver
 
 def crawlerBook(url, imagePath):
-    print("now :" + url)
-    header = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.101 Safari/537.36' }
-    html = requests.get(url, timeout=(10.0, 10.0), headers=header).text
-    soup = BeautifulSoup(html, "html.parser")
-    book = Book(
-        isbn=crawler.getIsbn(soup),
-        name=crawler.getName(soup),
-        name2=crawler.getName2(soup),
-        author=crawler.getAuthor(soup),
-        author2=crawler.getAuthor2(soup),
-        translator=crawler.getTranslator(soup),
-        publisher=crawler.getPublisher(soup),
-        publicationDate=crawler.getPublicationDate(soup),
-        language=crawler.getLanguage(soup),
-        collection=crawler.getCollection(soup),
-        specification=crawler.getSpecification(soup),
-        publication=crawler.getPublication(soup),
-        classification=crawler.getClassification(soup),
-        coverImageUrl=crawler.getCoverImageUrl(soup),
-        bookIntroduction=crawler.getBookIntroduction(soup),
-        authorIntroduction=crawler.getAuthorIntroduction(soup),
-        catalog=crawler.getCatalog(soup),
-        preface=crawler.getPreface(soup),
-        fromWhere="books"
-    )
-    # save image
-    book.bookUrl = url
-    if book.coverImageUrl != None:
-        if book.isbn != None:
-            book.coverImageId = book.isbn + "-" + book.fromWhere + ".jpg"
-            imageSaver.saveImageFile(imagePath + book.coverImageId, book.coverImageUrl)
+    try:
+        print("now :" + url)
+        header = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.101 Safari/537.36', 'Connection': 'close'}
+        req = requests.get(url, timeout=(60.0, 60.0), headers=header)
+        if req.status_code == 408:
+            print("CODE: 408......")
+            time.sleep(120)
+            crawlerBook(url, imagePath)
 
-    return book
+        html = req.text
+        req.close()
+        soup = BeautifulSoup(html, "html.parser")
+        book = Book(
+            isbn=crawler.getIsbn(soup),
+            name=crawler.getName(soup),
+            name2=crawler.getName2(soup),
+            author=crawler.getAuthor(soup),
+            author2=crawler.getAuthor2(soup),
+            translator=crawler.getTranslator(soup),
+            publisher=crawler.getPublisher(soup),
+            publicationDate=crawler.getPublicationDate(soup),
+            language=crawler.getLanguage(soup),
+            collection=crawler.getCollection(soup),
+            specification=crawler.getSpecification(soup),
+            publication=crawler.getPublication(soup),
+            classification=crawler.getClassification(soup),
+            coverImageUrl=crawler.getCoverImageUrl(soup),
+            bookIntroduction=crawler.getBookIntroduction(soup),
+            authorIntroduction=crawler.getAuthorIntroduction(soup),
+            catalog=crawler.getCatalog(soup),
+            preface=crawler.getPreface(soup),
+            fromWhere="books"
+        )
+        print("soup: " + str(soup))
+        soup = None
+        # save image
+        book.bookUrl = url
+        if book.coverImageUrl != None:
+            if book.isbn != None:
+                book.coverImageId = book.isbn + "-" + book.fromWhere + ".jpg"
+                imageSaver.saveImageFile(imagePath + book.coverImageId, book.coverImageUrl)
+
+        return book
+    except:
+        print("retry :" + url)
+        crawlerBook(url, imagePath)
+        time.sleep(15)
+
 
 
 """

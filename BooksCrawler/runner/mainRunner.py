@@ -25,6 +25,7 @@ class Worker(Thread):
             if task != None:
                 self.cond.acquire()
                 task.run()
+                time.sleep(5)
                 self.cond.release()
             threadPool.task_done()
             self.idel = True
@@ -59,24 +60,41 @@ for i in xrange(5):
 print("--------- worker started ---------")
 
 
-## 抓取book 各分類分頁page
-for url in urlList.booklist:
-    html = requests.get(url, timeout=(10.0, 10.0)).text
-    soup = BeautifulSoup(html, "html.parser")
-    pageSize = listCrawler.getPageSize(soup)
-    for index in range(pageSize):
+def putBookUrl(url, index):
         page = index+1
-        html2 = requests.get(url + str(page), timeout=(10.0, 10.0)).text
+        header = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.101 Safari/537.36', 'Connection': 'close'}
+        req = requests.get(url + str(page), timeout=(60.0, 60.0), headers=header)
+        html2 = req.text
+        req.close()
         soup2 = BeautifulSoup(html2, "html.parser")
         for bookurl in listCrawler.getBookList(soup2):
             #booksQueue.put(bookurl)
             threadPool.put(BookTask(bookurl))
             print("get and put url: " + bookurl)
-            if checkergo == False:
-                Checker().start()
-                checkergo = True
-        time.sleep(1)
+            #if checkergo == False:
+            #    Checker().start()
+            #    checkergo = True
+        time.sleep(3)
         print("get page: " + url + str(page))
+
+## 抓取book 各分類分頁page
+for url in urlList.booklist:
+    header = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.101 Safari/537.36', 'Connection': 'close'}
+    req = requests.get(url, timeout=(60.0, 60.0), headers=header)
+    if req.status_code == 408:
+        print("list get CODE: 408......")
+        time.sleep(120)
+        req = requests.get(url, timeout=(60.0, 60.0), headers=header)
+    html = req.text
+    req.close()
+    soup = BeautifulSoup(html, "html.parser")
+    pageSize = listCrawler.getPageSize(soup)
+    for index in range(pageSize):
+        try:
+            putBookUrl(url, index)
+        except:
+            time.sleep(3)
+            putBookUrl(url, index)
     time.sleep(1)
 
 #print("booksQueue size: " + str(booksQueue.qsize()))

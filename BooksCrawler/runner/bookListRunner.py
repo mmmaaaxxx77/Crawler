@@ -24,7 +24,7 @@ for l in urlList.booklist:
         soup2 = BeautifulSoup(html2, "html.parser")
         #print(listCrawler.getBookList(soup2))
         for bookurl in listCrawler.getBookList(soup2):
-            book = bookRunner.crawlerBook(bookurl, "/Users/johnnytsai/Desktop/books/image/")
+            book = bookRunner.crawlerBook(bookurl, "/Users/johnnytsai/Desktop/books/image2/")
             """
             print("ISBN: " + ("None" if book.isbn == None else book.isbn))
             print("Name: " + ("None" if book.name == None else book.name))
@@ -51,7 +51,7 @@ for l in urlList.booklist:
             print(json.dumps(book.__dict__, encoding="utf-8", ensure_ascii=False))
             if(book.isbn != None):
                 content = json.dumps(book.__dict__, encoding="utf-8", ensure_ascii=False)
-                ff = open("/Users/johnnytsai/Desktop/books/json/" + book.isbn + "-" + book.fromWhere + ".json", 'a')
+                ff = open("/Users/johnnytsai/Desktop/books/json2/" + book.isbn + "-" + book.fromWhere + ".json", 'a')
                 ff.write(content)
                 now_save += 1
             else:
