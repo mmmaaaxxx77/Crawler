@@ -45,10 +45,12 @@ booklist = []
 ]"""
 
 # 文學小說
+"""
 for i in range(16):
     p = i+1
     s = str(p) if p >= 10 else "0" + str(p)
     booklist.append("http://www.books.com.tw/web/sys_midme/books/01" + s + "/?o=1&v=1&page=")
+"""
 
 # 商業理財
 for i in range(11):

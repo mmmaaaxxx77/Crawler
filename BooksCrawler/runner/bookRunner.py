@@ -2,6 +2,8 @@
 from bs4 import BeautifulSoup
 import requests
 import time
+from requests.packages.urllib3 import Timeout
+from requests.packages.urllib3.exceptions import ConnectionError
 import crawler.bookCrawler as crawler
 from model.book import Book
 from saver import imageSaver
@@ -10,7 +12,7 @@ def crawlerBook(url, imagePath):
     try:
         print("now :" + url)
         header = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.101 Safari/537.36', 'Connection': 'close'}
-        req = requests.get(url, timeout=(60.0, 60.0), headers=header)
+        req = requests.get(url, timeout=(120.0, 120.0), headers=header)
         if req.status_code == 408:
             print("CODE: 408......")
             time.sleep(120)
@@ -40,7 +42,7 @@ def crawlerBook(url, imagePath):
             preface=crawler.getPreface(soup),
             fromWhere="books"
         )
-        print("soup: " + str(soup))
+        #print("soup: " + str(soup))
         soup = None
         # save image
         book.bookUrl = url
@@ -50,6 +52,14 @@ def crawlerBook(url, imagePath):
                 imageSaver.saveImageFile(imagePath + book.coverImageId, book.coverImageUrl)
 
         return book
+    except ConnectionError as e:
+        print("retry... " + url + e)
+        crawlerBook(url, imagePath)
+        time.sleep(15)
+    except Timeout as e:
+        print("retry... " + url + e)
+        crawlerBook(url, imagePath)
+        time.sleep(15)
     except:
         print("retry :" + url)
         crawlerBook(url, imagePath)

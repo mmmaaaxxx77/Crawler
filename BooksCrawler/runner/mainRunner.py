@@ -54,9 +54,10 @@ class Checker(Thread):
 ## book url queue
 booksQueue = Queue.Queue(0)
 
+pools = []
 ## 啟動 worker
 for i in xrange(5):
-    Worker().start()
+    pools.append(Worker().start())
 print("--------- worker started ---------")
 
 
@@ -67,24 +68,29 @@ def putBookUrl(url, index):
         html2 = req.text
         req.close()
         soup2 = BeautifulSoup(html2, "html.parser")
-        for bookurl in listCrawler.getBookList(soup2):
+        list = listCrawler.getBookList(soup2)
+        for bookurl in list:
             #booksQueue.put(bookurl)
             threadPool.put(BookTask(bookurl))
-            print("get and put url: " + bookurl)
+            #print("get and put url: " + bookurl)
             #if checkergo == False:
             #    Checker().start()
             #    checkergo = True
         time.sleep(3)
-        print("get page: " + url + str(page))
+        print("get page list size: " + str(len(list)) + "; " + url)
 
 ## 抓取book 各分類分頁page
 for url in urlList.booklist:
     header = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.101 Safari/537.36', 'Connection': 'close'}
-    req = requests.get(url, timeout=(60.0, 60.0), headers=header)
+    req = requests.get(url, timeout=(120.0, 120.0), headers=header)
     if req.status_code == 408:
         print("list get CODE: 408......")
-        time.sleep(120)
-        req = requests.get(url, timeout=(60.0, 60.0), headers=header)
+        time.sleep(180)
+        req = requests.get(url, timeout=(120.0, 120.0), headers=header)
+        if req.status_code == 408:
+            print("list get CODE: 408......")
+            time.sleep(180)
+            req = requests.get(url, timeout=(120.0, 120.0), headers=header)
     html = req.text
     req.close()
     soup = BeautifulSoup(html, "html.parser")
