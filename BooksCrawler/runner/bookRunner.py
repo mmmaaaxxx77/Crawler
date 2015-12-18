@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from bs4 import BeautifulSoup
+import datetime
 import requests
 import time
 from requests.packages.urllib3 import Timeout
@@ -8,7 +9,8 @@ import crawler.bookCrawler as crawler
 from model.book import Book
 from saver import imageSaver
 
-def crawlerBook(url, imagePath):
+
+def crawlerBook(url):
     try:
         print("now :" + url)
         header = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.101 Safari/537.36', 'Connection': 'close'}
@@ -16,12 +18,12 @@ def crawlerBook(url, imagePath):
         if req.status_code == 408:
             print("CODE: 408......")
             time.sleep(120)
-            crawlerBook(url, imagePath)
+            crawlerBook(url)
 
         html = req.text
         req.close()
         soup = BeautifulSoup(html, "html.parser")
-        book = Book(
+        """book = Book(
             isbn=crawler.getIsbn(soup),
             name=crawler.getName(soup),
             name2=crawler.getName2(soup),
@@ -40,30 +42,55 @@ def crawlerBook(url, imagePath):
             authorIntroduction=crawler.getAuthorIntroduction(soup),
             catalog=crawler.getCatalog(soup),
             preface=crawler.getPreface(soup),
-            fromWhere="books"
+            fromWhere="books",
+            bookUrl="",
+        )"""
+        book = dict(
+            isbn=crawler.getIsbn(soup),
+            name=crawler.getName(soup),
+            name2=crawler.getName2(soup),
+            author=crawler.getAuthor(soup),
+            author2=crawler.getAuthor2(soup),
+            translator=crawler.getTranslator(soup),
+            publisher=crawler.getPublisher(soup),
+            publicationDate=crawler.getPublicationDate(soup),
+            language=crawler.getLanguage(soup),
+            collection=crawler.getCollection(soup),
+            specification=crawler.getSpecification(soup),
+            publication=crawler.getPublication(soup),
+            classification=crawler.getClassification(soup),
+            coverImageUrl=crawler.getCoverImageUrl(soup),
+            bookIntroduction=crawler.getBookIntroduction(soup),
+            authorIntroduction=crawler.getAuthorIntroduction(soup),
+            catalog=crawler.getCatalog(soup),
+            preface=crawler.getPreface(soup),
+            fromWhere="books",
+            bookUrl="",
         )
+        print book["isbn"]
         #print("soup: " + str(soup))
         soup = None
         # save image
-        book.bookUrl = url
-        if book.coverImageUrl != None:
-            if book.isbn != None:
-                book.coverImageId = book.isbn + "-" + book.fromWhere + ".jpg"
-                imageSaver.saveImageFile(imagePath + book.coverImageId, book.coverImageUrl)
+        book["bookUrl"] = url
+        if book["coverImageUrl"] != None:
+            if book["isbn"] != None:
+                book["coverImageId"] = book["isbn"] + ".jpg"
+                #imageSaver.saveImageFile(imagePath + book.coverImageId, book.coverImageUrl)
+                imageSaver.saveImageFileToFTP(book["coverImageId"], book["coverImageUrl"])
 
         return book
     except ConnectionError as e:
-        print("retry... " + url + e)
+        print("ConnectionError retry... " + url + e)
+        time.sleep(100)
         crawlerBook(url, imagePath)
-        time.sleep(15)
     except Timeout as e:
-        print("retry... " + url + e)
+        print("Timeout retry... " + url + e)
+        time.sleep(100)
         crawlerBook(url, imagePath)
-        time.sleep(15)
-    except:
-        print("retry :" + url)
-        crawlerBook(url, imagePath)
-        time.sleep(15)
+    """except:
+        print("Other retry :" + url)
+        time.sleep(100)
+        crawlerBook(url, imagePath)"""
 
 
 
@@ -117,3 +144,7 @@ print("Catalog: " + ("None" if book.catalog == None else book.catalog))
 print("Preface: " + ("None" if book.preface == None else book.preface))
 """
 
+"""books = crawlerBook("http://www.books.com.tw/products/0010700444?loc=P_004_002", "")
+Book.create(**books)
+#print Book.get(isbn="97898656718391")
+print books"""

@@ -30,7 +30,6 @@ def findSameTextFieldInList(soup, soupeSelect, name):
     except:
         return None
 
-
 def findTargetReturnNeeds(soup, target, name, check):
     try:
         result = soup.select(target)

@@ -9,7 +9,7 @@ __author__ = 'johnnytsai'
 class Book(models.Model):
 
     # id
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid1, editable=False)
     # ISBN
     isbn = models.CharField(max_length=255)
     # 書名
@@ -39,9 +39,9 @@ class Book(models.Model):
     # 封面圖id
     coverImageId = models.CharField(max_length=255, null=True)
     # 封面圖網址
-    coverImageUrl = models.URLField(null=True)
+    coverImageUrl = models.CharField(max_length=255, null=True)
     # 原網址
-    bookUrl = models.URLField(null=True)
+    bookUrl = models.CharField(max_length=255, null=True)
     # 內容簡介
     bookIntroduction = models.TextField(null=True)
     # 作者簡介

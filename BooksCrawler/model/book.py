@@ -1,78 +1,61 @@
 # -*- coding: utf-8 -*-
+import uuid
 import datetime
+from peewee import Model, Field, CharField, DateField, TextField, DateTimeField, MySQLDatabase
 
-__author__ = 'johnnytsai'
+johnnyNAS = MySQLDatabase("crawler_data", host="172.19.51.222", port=3306, user="crawler",
+                          passwd="1130")
 
-
-class Book:
+class Book(Model):
+    # id
+    id = CharField(max_length=255, primary_key=True, default=uuid.uuid1, unique=False)
     # ISBN
-    isbn = None
+    isbn = CharField(max_length=255, default="Null")
     # 書名
-    name = None
+    name = CharField(max_length=255, default="Null")
     # 書名2
-    name2 = None
+    name2 = CharField(max_length=255, null=True)
     # 作者
-    author = None
+    author = CharField(max_length=255, null=True)
     # 作者2
-    author2 = None
+    author2 = CharField(max_length=255, null=True)
     # 譯者
-    translator = None
+    translator = CharField(max_length=255, null=True)
     # 出版社
-    publisher = None
+    publisher = CharField(max_length=255, null=True)
     # 出版日期
-    publicationDate = None
+    publicationDate = DateTimeField(null=True, formats="%Y-%m-%d %H:%M:%S")
     # 語言
-    language = None
+    language = CharField(max_length=255, null=True)
     # 叢書系列
-    collection = None
+    collection = CharField(max_length=255, null=True)
     # 規格
-    specification = None
+    specification = CharField(max_length=255, null=True)
     # 出版地
-    publication = None
+    publication = CharField(max_length=255, null=True)
     # 分類
-    classification = None
+    classification = CharField(max_length=255, null=True)
     # 封面圖id
-    coverImageId = None
+    coverImageId = CharField(max_length=255, null=True)
     # 封面圖網址
-    coverImageUrl = None
+    coverImageUrl = CharField(max_length=255, null=True)
     # 原網址
-    bookUrl = None
+    bookUrl = CharField(max_length=255, null=True)
     # 內容簡介
-    bookIntroduction = None
+    bookIntroduction = TextField(null=True)
     # 作者簡介
-    authorIntroduction = None
+    authorIntroduction = TextField(null=True)
     # 目錄
-    catalog = None
+    catalog = TextField(null=True)
     # 序
-    preface = None
+    preface = TextField(null=True)
     # 出自哪一網站
-    fromWhere = None
+    fromWhere = CharField(max_length=255, null=True)
     # 建立時間
-    createDate = datetime.datetime.now()
+    createTime = DateTimeField(default=datetime.datetime.now)
     # 修改時間
-    updateDate = datetime.datetime.now()
+    updateTime = DateTimeField(default=datetime.datetime.now)
 
-    def __init__(self, **dic):
-        self.isbn = dic["isbn"]
-        self.name = dic["name"]
-        self.name2 = None if 'name2' not in dic else dic["name2"]
-        self.author = None if 'author' not in dic else dic["author"]
-        self.author2 = None if 'author2' not in dic else dic["author2"]
-        self.translator = None if 'translator' not in dic else dic["translator"]
-        self.publisher = None if 'publisher' not in dic else dic["publisher"]
-        self.publicationDate = None if 'publicationDate' not in dic else dic["publicationDate"]
-        self.language = None if 'language' not in dic else dic["language"]
-        self.collection = None if 'collection' not in dic else dic["collection"]
-        self.specification = None if 'specification' not in dic else dic["specification"]
-        self.publication = None if 'publication' not in dic else dic["publication"]
-        self.classification = None if 'classification' not in dic else dic["classification"]
-        self.coverImageId = None if 'coverImageId' not in dic else dic["coverImageId"]
-        self.coverImageUrl = None if 'coverImageUrl' not in dic else dic["coverImageUrl"]
-        self.bookUrl = None if 'bookUrl' not in dic else dic["bookUrl"]
-        self.bookIntroduction = None if 'bookIntroduction' not in dic else dic["bookIntroduction"]
-        self.authorIntroduction = None if 'authorIntroduction' not in dic else dic["authorIntroduction"]
-        self.catalog = None if 'catalog' not in dic else dic["catalog"]
-        self.preface = None if 'preface' not in dic else dic["preface"]
-        self.fromWhere = None if 'fromWhere' not in dic else dic["fromWhere"]
-
-
+    class Meta:
+        database = johnnyNAS
+        db_table = 'books'

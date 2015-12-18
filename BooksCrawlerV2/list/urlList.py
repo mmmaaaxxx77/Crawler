@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-booklist = []
-"""
+booklist = [
     # 翻譯文學
     "http://www.books.com.tw/web/sys_midme/books/0101/?o=1&v=1&page=",
     # 華文創作
@@ -42,14 +41,13 @@ booklist = []
     "http://www.books.com.tw/web/sys_midme/books/0203/?o=1&v=1&page=",
     "http://www.books.com.tw/web/sys_midme/books/0204/?o=1&v=1&page=",
     "http://www.books.com.tw/web/sys_midme/books/0201/?o=1&v=1&page=",
-]"""
+]
 
 # 文學小說
 for i in range(16):
     p = i+1
     s = str(p) if p >= 10 else "0" + str(p)
     booklist.append("http://www.books.com.tw/web/sys_midme/books/01" + s + "/?o=1&v=1&page=")
-
 
 # 商業理財
 for i in range(11):
