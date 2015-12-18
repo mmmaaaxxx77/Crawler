@@ -67,7 +67,6 @@ def crawlerBook(url):
             fromWhere="books",
             bookUrl="",
         )
-        print book["isbn"]
         #print("soup: " + str(soup))
         soup = None
         # save image

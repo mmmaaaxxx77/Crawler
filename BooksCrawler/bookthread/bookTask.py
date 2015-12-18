@@ -38,8 +38,7 @@ class BookTask:
             print("error cannot handel... " + e)
         except RequestException as e:
             print("error cannot handel... " + e)
-        except:
-            print("book == null")
+
 
 
 
