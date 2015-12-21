@@ -17,7 +17,7 @@ def crawlerBook(url):
         req = requests.get(url, timeout=(120.0, 120.0), headers=header)
         if req.status_code == 408:
             print("CODE: 408......")
-            time.sleep(120)
+            time.sleep(180)
             crawlerBook(url)
 
         html = req.text
@@ -81,11 +81,11 @@ def crawlerBook(url):
     except ConnectionError as e:
         print("ConnectionError retry... " + url + e)
         time.sleep(100)
-        crawlerBook(url, imagePath)
+        crawlerBook(url)
     except Timeout as e:
         print("Timeout retry... " + url + e)
         time.sleep(100)
-        crawlerBook(url, imagePath)
+        crawlerBook(url)
     """except:
         print("Other retry :" + url)
         time.sleep(100)

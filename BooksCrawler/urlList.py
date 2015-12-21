@@ -64,7 +64,7 @@ for i in range(13):
     s = str(p) if p >= 10 else "0" + str(p)
     booklist.append("http://www.books.com.tw/web/sys_midme/books/03" + s + "/?o=1&v=1&page=")
 
-
+"""
 # 人文史地
 for i in range(7):
     p = i+1
@@ -182,3 +182,4 @@ for i in range(20):
     p = i+1
     s = str(p) if p >= 10 else "0" + str(p)
     booklist.append("http://www.books.com.tw/web/sys_midme/books/20" + s + "/?o=1&v=1&page=")
+"""
