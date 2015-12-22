@@ -18,30 +18,16 @@ class BookTask:
         try:
             self.getBook()
         except ConnectionError as e:
-            print("error cannot handel... " + e)
-            if(self.num <=5):
-                self.getBook()
-            self.num += 1
+            print("error cannot handel... " + str(e))
         except Timeout as e:
-            print("error cannot handel... " + e)
-            if(self.num <=5):
-                self.getBook()
-            self.num += 1
+            print("error cannot handel... " + str(e))
         except HTTPError as e:
-            print("error cannot handel... " + e)
-            if(self.num <=5):
-                self.getBook()
-            self.num += 1
+            print("error cannot handel... " + str(e))
         except RequestException as e:
-            print("error cannot handel... " + e)
-            if(self.num <=5):
-                self.getBook()
-            self.num += 1
+            print("error cannot handel... " + str(e))
+
         except:
             print("book == null")
-            if(self.num <=5):
-                self.getBook()
-            self.num += 1
 
     def getBook(self):
         book = bookRunner.crawlerBook(self.url)
@@ -58,6 +44,3 @@ class BookTask:
                 Book.create(**book)
         else:
             print("error book")
-            if(self.num <=5):
-                self.getBook()
-            self.num += 1
