@@ -12,11 +12,11 @@ class BookTask:
 
 
     def run(self):
-        book = bookRunner.crawlerBook(self.url, "/Users/johnnytsai/Desktop/books/image/")
+        book = bookRunner.crawlerBook(self.url, "/Users/johnnytsai/books/image/")
         print(json.dumps(book.__dict__, encoding="utf-8", ensure_ascii=False))
         if(book.isbn != None):
             content = json.dumps(book.__dict__, encoding="utf-8", ensure_ascii=False)
-            ff = open("/Users/johnnytsai/Desktop/books/json/" + book.isbn + "-" + book.fromWhere + ".json", 'a')
+            ff = open("/Users/johnnytsai/books/json/" + book.isbn + "-" + book.fromWhere + ".json", 'a')
             ff.write(content)
         else:
             print("error book")

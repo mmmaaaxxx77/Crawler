@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import datetime
+import base64
 
 __author__ = 'johnnytsai'
 
@@ -54,25 +55,25 @@ class Book:
 
     def __init__(self, **dic):
         self.isbn = dic["isbn"]
-        self.name = dic["name"]
-        self.name2 = None if 'name2' not in dic else dic["name2"]
-        self.author = None if 'author' not in dic else dic["author"]
-        self.author2 = None if 'author2' not in dic else dic["author2"]
-        self.translator = None if 'translator' not in dic else dic["translator"]
-        self.publisher = None if 'publisher' not in dic else dic["publisher"]
+        self.name = base64.b64encode(dic["name"])
+        self.name2 = None if 'name2' not in dic else (None if dic["name2"] is None else base64.b64encode(dic["name2"]))
+        self.author = None if 'author' not in dic else (None if dic["author"] is None else base64.b64encode(dic["author"]))
+        self.author2 = None if 'author2' not in dic else (None if dic["author2"] is None else base64.b64encode(dic["author2"]))
+        self.translator = None if 'translator' not in dic else (None if dic["translator"] is None else base64.b64encode(dic["translator"]))
+        self.publisher = None if 'publisher' not in dic else (None if dic["publisher"] is None else base64.b64encode(dic["publisher"]))
         self.publicationDate = None if 'publicationDate' not in dic else dic["publicationDate"]
-        self.language = None if 'language' not in dic else dic["language"]
-        self.collection = None if 'collection' not in dic else dic["collection"]
-        self.specification = None if 'specification' not in dic else dic["specification"]
-        self.publication = None if 'publication' not in dic else dic["publication"]
-        self.classification = None if 'classification' not in dic else dic["classification"]
+        self.language = None if 'language' not in dic else (None if dic["language"] is None else base64.b64encode(dic["language"]))
+        self.collection = None if 'collection' not in dic else (None if dic["collection"] is None else base64.b64encode(dic["collection"]))
+        self.specification = None if 'specification' not in dic else (None if dic["specification"] is None else base64.b64encode(dic["specification"]))
+        self.publication = None if 'publication' not in dic else (None if dic["publication"] is None else base64.b64encode(dic["publication"]))
+        self.classification = None if 'classification' not in dic else (None if dic["classification"] is None else base64.b64encode(dic["classification"]))
         self.coverImageId = None if 'coverImageId' not in dic else dic["coverImageId"]
         self.coverImageUrl = None if 'coverImageUrl' not in dic else dic["coverImageUrl"]
         self.bookUrl = None if 'bookUrl' not in dic else dic["bookUrl"]
-        self.bookIntroduction = None if 'bookIntroduction' not in dic else dic["bookIntroduction"]
-        self.authorIntroduction = None if 'authorIntroduction' not in dic else dic["authorIntroduction"]
-        self.catalog = None if 'catalog' not in dic else dic["catalog"]
-        self.preface = None if 'preface' not in dic else dic["preface"]
+        self.bookIntroduction = None if 'bookIntroduction' not in dic else (None if dic["bookIntroduction"] is None else base64.b64encode(dic["bookIntroduction"]))
+        self.authorIntroduction = None if 'authorIntroduction' not in dic else (None if dic["authorIntroduction"] is None else base64.b64encode(dic["authorIntroduction"]))
+        self.catalog = None if 'catalog' not in dic else (None if dic["catalog"] is None else base64.b64encode(dic["catalog"]))
+        self.preface = None if 'preface' not in dic else (None if dic["preface"] is None else base64.b64encode(dic["preface"]))
         self.fromWhere = None if 'fromWhere' not in dic else dic["fromWhere"]
 
 
